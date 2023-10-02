@@ -46,26 +46,3 @@ jobs:
           GORELEASER_RELEASE: true
           GORELEASER_MOUNT_CONFIG: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  homebrew:
-    runs-on: ubuntu-latest
-    needs: [ publish ]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: release version
-        run: echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-      - name: check if pre-release
-        id: check
-        run: |
-          is_prerelease=$(./script/is_prerelease.sh ${{ env.RELEASE_TAG }}; echo $?)
-          echo "is_prerelease=${is_prerelease}" >> $GITHUB_OUTPUT
-      - name: notify homebrew with a new release
-        if: contains(steps.check.outputs.is_prerelease, '1')
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          token: ${{ secrets.GORELEASER_ACCESS_TOKEN }}
-          repo: akash-network/homebrew-tap
-          ref: refs/heads/master
-          workflow: provider-services
-          inputs: '{"tag": "${{ env.RELEASE_TAG }}"}'
