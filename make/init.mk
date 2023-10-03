@@ -120,7 +120,7 @@ else
 	AKASHD_BUILD_FROM_SRC := true
 endif
 
-RELEASE_DOCKER_IMAGE         ?= ghcr.io/akash-network/provider
+RELEASE_DOCKER_IMAGE         ?= ghcr.io/PraetorOne/provider
 
 ifeq (0, $(shell which kind &>/dev/null; echo $$?))
 	KIND_VERSION                 ?= $(shell kind --version | cut -d" " -f3)
